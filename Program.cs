@@ -8,7 +8,7 @@ IHost host = Host.CreateDefaultBuilder(args)
 
         services.AddDbContext<MyDbContext>(x =>
         {
-            x.UseSqlServer("data source=.;initial catalog=db-seeumove-test; persist security info=True;Integrated Security=SSPI;TrustServerCertificate=True");
+            x.UseSqlServer("data source=.;initial catalog=db-eforder-test; persist security info=True;Integrated Security=SSPI;TrustServerCertificate=True");
         });
 
     })
