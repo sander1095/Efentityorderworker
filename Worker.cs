@@ -2,21 +2,26 @@ namespace Efentityorderworker;
 
 public class Worker : BackgroundService
 {
-    private readonly MyDbContext _dbContext;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public Worker(MyDbContext dbContext)
+    public Worker(IServiceScopeFactory serviceScopeFactory)
     {
-        _dbContext = dbContext;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var user = new User("Test user");
-        var order = new Order(user);
+        using (var scope = _serviceScopeFactory.CreateScope())
+        {
 
-        _dbContext.Users.Add(user);
-        _dbContext.Orders.Add(order);
+            var dbContext = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+            var user = new User("Test user");
+            var order = new Order(user);
 
-        _dbContext.SaveChanges();
+            dbContext.Users.Add(user);
+            dbContext.Orders.Add(order);
+
+            await dbContext.SaveChangesAsync();
+        }
     }
 }
