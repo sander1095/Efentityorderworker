@@ -1,20 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Efentityorderworker;
 
 public class Worker : BackgroundService
 {
-    private readonly ILogger<Worker> _logger;
+    private readonly MyDbContext _dbContext;
 
-    public Worker(ILogger<Worker> logger)
+    public Worker(MyDbContext dbContext)
     {
-        _logger = logger;
+        _dbContext = dbContext;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            await Task.Delay(1000, stoppingToken);
-        }
+        var user = new User("Test user");
+        var order = new Order(user);
+
+        _dbContext.Users.Add(user);
+        _dbContext.Orders.Add(order);
+
+        _dbContext.SaveChanges();
     }
 }
