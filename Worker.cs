@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace Efentityorderworker;
 
 public class Worker : BackgroundService
